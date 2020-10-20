@@ -47,7 +47,10 @@ public class Controller {
         // For each crawl, you need to add some seed urls. These are the first
         // URLs that are fetched and then the crawler starts following links
         // which are found in these pages
-        controller.addSeed("https://divar.ir/s/chabahar/buy-residential?page=1");
+        int numberOfPages = 50;
+        for (int i = 1; i < numberOfPages; i++) {
+            controller.addSeed("https://divar.ir/s/chabahar/buy-residential?page=" + i);
+        }
 
         // Number of threads to use during crawling.
         int numberOfCrawlers = 8;
@@ -59,6 +62,9 @@ public class Controller {
         // will reach the line after this only when crawling is finished.
         controller.start(factory, numberOfCrawlers);
 
-        FetchedDataUtils.creatHtmlFile();
+
+        FetchedDataUtils.parseHTMLs();
+        FetchedDataUtils.printInformation();
+        FetchedDataUtils.saveInJSONFile();
     }
 }

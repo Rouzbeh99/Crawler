@@ -2,7 +2,6 @@ import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
-import org.apache.http.Header;
 
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -39,23 +38,20 @@ public class Crawler extends WebCrawler {
 
         if (page.getParseData() instanceof HtmlParseData) {
             HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
-            String text = htmlParseData.getText();
             String html = htmlParseData.getHtml();
             Set<WebURL> links = htmlParseData.getOutgoingUrls();
-            System.out.println("Text length: " + text.length());
             System.out.println("Html length: " + html.length());
             System.out.println("Number of outgoing links: " + links.size());
-            FetchedDataUtils.saveHtml(html);
-            System.out.println(html);
-            FetchedDataUtils.saveURL(links);
+            if(!isSeed(page)) {
+                FetchedDataUtils.saveURL(page.getWebURL());
+                FetchedDataUtils.saveHTML(html);
+            }
+
         }
 
-        Header[] responseHeaders = page.getFetchResponseHeaders();
-        if (responseHeaders != null) {
-            logger.debug("Response headers:");
-            for (Header header : responseHeaders) {
-                logger.debug("\t{}: {}", header.getName(), header.getValue());
-            }
-        }
+    }
+
+    private static boolean isSeed(Page page) {
+        return page.getWebURL().toString().contains("page");
     }
 }

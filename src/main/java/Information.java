@@ -3,7 +3,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class AdvertisementInformation {
+public class Information {
     private String title;
     private String description;
     private String link;
